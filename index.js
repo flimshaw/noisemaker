@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const argv = require('minimist')(process.argv.slice(2));
 const fs = require('fs');
 const PNG = require('pngjs').PNG;
@@ -13,7 +14,7 @@ const LOOP_RADIUS = argv.loop_radius !== undefined ? argv.loop_radius : Math.PI;
 const VERT_SHADER = glsl(argv.vert !== undefined ? argv.vert : './shaders/default.vert');
 const FRAG_SHADER = glsl(argv.frag !== undefined ? argv.frag : './shaders/default.frag');
 
-const time = argv.time !== undefined ? argv.time : 0.0;
+const time = argv.t !== undefined ? argv.t : 0.0;
 
 const gl = require('headless-gl')(OUTPUT_SIZE, OUTPUT_SIZE);
 
@@ -92,13 +93,6 @@ function render() {
 	// const pixels = new Uint8Array(OUTPUT_SIZE * OUTPUT_SIZE * 4);
 	const png = new PNG({ width: OUTPUT_SIZE, height: OUTPUT_SIZE });
 	gl.readPixels(0, 0, OUTPUT_SIZE, OUTPUT_SIZE, gl.RGBA, gl.UNSIGNED_BYTE, png.data);
-
-	// for(var i=0; i<pixels.length; i+=4) {
-	//   png.data[i+0] = pixels[i+0];
-	//   png.data[i+1] = pixels[i+1];
-	//   png.data[i+2] = pixels[i+2];
-	//   png.data[i+3] = pixels[i+3];
-	// }
 
 	png.pack().pipe(fs.createWriteStream(`${process.cwd()}/noise_${OUTPUT_SIZE}_${padToFour(time)}.png`));
 }
