@@ -3,7 +3,6 @@ const fs = require('fs');
 const PNG = require('pngjs').PNG;
 const glsl = require('glslify');
 
-
 const OUTPUT_SIZE = argv.size !== undefined ? argv.size : 512;
 const NOISE_SCALE = argv.noise_scale !== undefined ? argv.noise_scale : 1.0;
 const FPS = argv.fps !== undefined ? argv.fps : 60;
@@ -44,12 +43,8 @@ function createProgram(vstr, fstr) {
 	return program;
 }
 
-
-
-// INITIALIZATION
+// Create a two triangle plane that fills the viewport
 var boxSize = 1.;
-
-
 
 var arrays = {
   position: [-boxSize, -boxSize, 0, boxSize, -boxSize, 0, -boxSize, boxSize, 0, -boxSize, boxSize, 0, boxSize, -boxSize, 0, boxSize, boxSize, 0],
@@ -80,28 +75,30 @@ function padToFour(number) {
 }
 
 function render() {
+
+	// set uniforms
 	gl.uniform2f(program.resolutionUniform, OUTPUT_SIZE, OUTPUT_SIZE);
 	gl.uniform1f(program.timeUniform, time*.005);
-
 	gl.uniform2f(program.seedUniform, time, time);
 
-	gl.uniform2f(program.resolutionUniform, OUTPUT_SIZE, OUTPUT_SIZE);
-
+	// setup screen tile
 	gl.enableVertexAttribArray(program.vertexPosAttrib);
 	gl.vertexAttribPointer(program.vertexPosAttrib, 3, gl.FLOAT, false, 0, 0);
+
+	// draw the loaded program to the screen
 	gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-	var pixels = new Uint8Array(OUTPUT_SIZE * OUTPUT_SIZE * 4);
-	gl.readPixels(0, 0, OUTPUT_SIZE, OUTPUT_SIZE, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
-
+	// read the render buffer back
+	// const pixels = new Uint8Array(OUTPUT_SIZE * OUTPUT_SIZE * 4);
 	const png = new PNG({ width: OUTPUT_SIZE, height: OUTPUT_SIZE });
+	gl.readPixels(0, 0, OUTPUT_SIZE, OUTPUT_SIZE, gl.RGBA, gl.UNSIGNED_BYTE, png.data);
 
-	for(var i=0; i<pixels.length; i+=4) {
-	  png.data[i+0] = pixels[i+0];
-	  png.data[i+1] = pixels[i+1];
-	  png.data[i+2] = pixels[i+2];
-	  png.data[i+3] = pixels[i+3];
-	}
+	// for(var i=0; i<pixels.length; i+=4) {
+	//   png.data[i+0] = pixels[i+0];
+	//   png.data[i+1] = pixels[i+1];
+	//   png.data[i+2] = pixels[i+2];
+	//   png.data[i+3] = pixels[i+3];
+	// }
 
 	png.pack().pipe(fs.createWriteStream(`${process.cwd()}/noise_${OUTPUT_SIZE}_${padToFour(time)}.png`));
 }

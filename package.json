@@ -10,6 +10,9 @@
     "name": "Charlie Hoey",
     "email": "me@charliehoey.com"
   },
+  "bin": {
+    "noisemaker": "./index.js"
+  },
   "license": "MIT",
   "semistandard": {
     "ignore": [
