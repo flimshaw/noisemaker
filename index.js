@@ -3,18 +3,34 @@ const argv = require('minimist')(process.argv.slice(2));
 const fs = require('fs');
 const PNG = require('pngjs').PNG;
 const glsl = require('glslify');
+const path = require('path');
 
 const OUTPUT_SIZE = argv.size !== undefined ? argv.size : 512;
 const NOISE_SCALE = argv.noise_scale !== undefined ? argv.noise_scale : 1.0;
-const FPS = argv.fps !== undefined ? argv.fps : 60;
-const LENGTH = argv.loop_length !== undefined ? argv.loop_length : 60;
-const FRAME_COUNT = FPS * LENGTH;
 const LOOP_RADIUS = argv.loop_radius !== undefined ? argv.loop_radius : Math.PI;
+const TIME = argv.t !== undefined ? argv.t : 0.0;
+const OUTPUT_FILE = `/noise_${OUTPUT_SIZE}_${TIME.toFixed(8)}.png`
+const OUTPUT_PATH = argv.o !== undefined ? path.resolve(process.cwd(), argv.o) : `${process.cwd()}${OUTPUT_FILE}`;
+
+// if no arguments passed, display help
+if(Object.keys(argv).length === 1) {
+	console.log(`
+noisemaker
++ + +
+
+options:
+-size [512]	        png output size in pixels, always square
+-noise_scale [1.0]	scale of noise, bigger number = higher frequency
+-t [0.0]	          timestamp to render in noise field, like a seed you can fade
+-o [./noise_...]	  output path relative to current location for png
+
+	`)
+}
 
 const VERT_SHADER = glsl(argv.vert !== undefined ? argv.vert : './shaders/default.vert');
 const FRAG_SHADER = glsl(argv.frag !== undefined ? argv.frag : './shaders/default.frag');
 
-const time = argv.t !== undefined ? argv.t : 0.0;
+
 
 const gl = require('headless-gl')(OUTPUT_SIZE, OUTPUT_SIZE);
 
@@ -79,8 +95,8 @@ function render() {
 
 	// set uniforms
 	gl.uniform2f(program.resolutionUniform, OUTPUT_SIZE, OUTPUT_SIZE);
-	gl.uniform1f(program.timeUniform, time*.005);
-	gl.uniform2f(program.seedUniform, time, time);
+	gl.uniform1f(program.timeUniform, TIME*.005);
+	gl.uniform2f(program.seedUniform, TIME, TIME);
 
 	// setup screen tile
 	gl.enableVertexAttribArray(program.vertexPosAttrib);
@@ -94,7 +110,7 @@ function render() {
 	const png = new PNG({ width: OUTPUT_SIZE, height: OUTPUT_SIZE });
 	gl.readPixels(0, 0, OUTPUT_SIZE, OUTPUT_SIZE, gl.RGBA, gl.UNSIGNED_BYTE, png.data);
 
-	png.pack().pipe(fs.createWriteStream(`${process.cwd()}/noise_${OUTPUT_SIZE}_${padToFour(time)}.png`));
+	png.pack().pipe(fs.createWriteStream(OUTPUT_PATH));
 }
 
 render();
