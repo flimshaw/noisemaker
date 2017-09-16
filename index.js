@@ -10,7 +10,9 @@ const NOISE_SCALE = argv.noise_scale !== undefined ? argv.noise_scale : 1.0;
 const LOOP_RADIUS = argv.loop_radius !== undefined ? argv.loop_radius : Math.PI;
 const TIME = argv.t !== undefined ? argv.t : 0.0;
 const OUTPUT_FILE = `/noise_${OUTPUT_SIZE}_${TIME.toFixed(8)}.png`
-const OUTPUT_PATH = argv.o !== undefined ? path.resolve(process.cwd(), argv.o) : `${process.cwd()}${OUTPUT_FILE}`;
+const OUTPUT_PATH = argv.o !== undefined ? path.resolve(process.cwd(), argv.o) : path.resolve(process.cwd(), OUTPUT_FILE);
+
+console.log(OUTPUT_PATH);
 
 // if no arguments passed, display help
 if(Object.keys(argv).length === 1) {
@@ -24,7 +26,8 @@ options:
 -t [0.0]	          timestamp to render in noise field, like a seed you can fade
 -o [./noise_...]	  output path relative to current location for png
 
-	`)
+	`);
+	return false;
 }
 
 const VERT_SHADER = glsl(argv.vert !== undefined ? argv.vert : './shaders/default.vert');
