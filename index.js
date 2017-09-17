@@ -5,11 +5,11 @@ const PNG = require('pngjs').PNG;
 const glsl = require('glslify');
 const path = require('path');
 
-const OUTPUT_SIZE = argv.size !== undefined ? argv.size : 512;
-const NOISE_SCALE = argv.noise_scale !== undefined ? argv.noise_scale : 1.0;
-const LOOP_RADIUS = argv.loop_radius !== undefined ? argv.loop_radius : Math.PI;
-const TIME = argv.t !== undefined ? argv.t : 0.0;
-const OUTPUT_FILE = `/noise_${OUTPUT_SIZE}_${TIME.toFixed(8)}.png`
+const OUTPUT_SIZE = argv.size !== undefined ? Math.floor(argv.size) : 512;
+const NOISE_SCALE = argv.noise_scale !== undefined ? parseFloat(argv.noise_scale) : 1.0;
+const LOOP_RADIUS = argv.loop_radius !== undefined ? parseFloat(argv.loop_radius) : Math.PI;
+const TIME = argv.t !== undefined ? parseFloat(argv.t) : 0.0;
+const OUTPUT_FILE = `noise_${OUTPUT_SIZE}_${TIME.toFixed(8)}.png`
 const OUTPUT_PATH = argv.o !== undefined ? path.resolve(process.cwd(), argv.o) : path.resolve(process.cwd(), OUTPUT_FILE);
 
 // if no arguments passed, display help
