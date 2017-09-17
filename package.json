@@ -1,6 +1,6 @@
 {
   "name": "noisemaker",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Flimshaw's Tileable Perlin Noise Generator",
   "scripts": {
     "start": "node index.js"
