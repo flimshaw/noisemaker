@@ -2,6 +2,8 @@
 
 Generate tileable perlin noise textures from the command line.
 
+![noisemaker -t 653.0 -o example.png](./example.png?raw=true "Title")
+
 It's reaaaal basic but I figured I'd share it. Uses glsl-noise, headless-gl and pngjs to generate perlin noise fields that are tileable in all directions. Adjust the "time" value to advance the generator. It kinda randomizes them over time, and starts to get a little glitchy after 10000.0 or so.
 
 ## installation
@@ -30,7 +32,7 @@ This is already pretty awesome, and you can do fun things by scaling how x and y
 
 I will not claim to _completely_ grok the math, but I can tell you what it is doing. Instead of a two-dimensional noise function, we use a four-dimensional one. And instead of giving it our 2D x and y coordinates, we use those 2D coordinates to generate two pairs of x,y coordinates, each transcribing a circle in 3D space perpendicular to the other. You pass these into your 4D noise function like: `snoise(x1,y1,x2,y2);`, and the value of the noise field at that 4 dimensional position is the value of the pixel at that x,y position.
 
-All this code is in `shaders/default.frag`, and I render it on a headless-gl context, and then pipe it back into a PNG file.
+All this code is in `shaders/default.frag`, and I render it on a headless-gl context, and then pipe it back into a PNG file. I do one of these 4D passes with different offsets for each red, green and blue channels of the png.
 
 ## thanks
 
