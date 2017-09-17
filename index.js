@@ -12,8 +12,6 @@ const TIME = argv.t !== undefined ? argv.t : 0.0;
 const OUTPUT_FILE = `/noise_${OUTPUT_SIZE}_${TIME.toFixed(8)}.png`
 const OUTPUT_PATH = argv.o !== undefined ? path.resolve(process.cwd(), argv.o) : path.resolve(process.cwd(), OUTPUT_FILE);
 
-console.log(OUTPUT_PATH);
-
 // if no arguments passed, display help
 if(Object.keys(argv).length === 1) {
 	console.log(`
