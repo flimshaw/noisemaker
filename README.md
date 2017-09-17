@@ -2,7 +2,7 @@
 
 Generate tileable perlin noise textures from the command line.
 
-![noisemaker -t 653.0 -o example.png](./example.png?raw=true "Title")
+![noisemaker -t 653.0 -o example.png](./example.png?raw=true "noisemaker -t 653.0 -o example.png")
 
 It's reaaaal basic but I figured I'd share it. Uses glsl-noise, headless-gl and pngjs to generate perlin noise fields that are tileable in all directions. Adjust the "time" value to advance the generator. It kinda randomizes them over time, and starts to get a little glitchy after 10000.0 or so.
 
@@ -19,6 +19,10 @@ create a random noise png in the current directory
 create a png with a specific seed/time in the current directory
 
 `noisemaker -t 1.0`
+
+create a named png that looks just like the image above (example.png):
+
+`noisemaker -t 653.0 -o example_copy.png`
 
 ## how does it work?
 
