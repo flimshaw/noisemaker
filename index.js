@@ -26,6 +26,7 @@ options:
 -o [./noise_...]	  output path relative to current location for png
 -a 									include an alpha noise channel as well
 
+by flimshaw <flimshaw.net>
 	`);
 	return false;
 }
@@ -33,13 +34,12 @@ options:
 const VERT_SHADER = glsl(argv.vert !== undefined ? argv.vert : './shaders/default.vert');
 const FRAG_SHADER = glsl(argv.frag !== undefined ? argv.frag : './shaders/default.frag');
 
-
-
 const gl = require('headless-gl')(OUTPUT_SIZE, OUTPUT_SIZE);
 
 gl.clearColor(0,0,0,1);
 gl.clear(gl.COLOR_BUFFER_BIT);
 
+// helper function to create and compile a shader
 function createShader(str, type) {
 	var shader = gl.createShader(type);
 	gl.shaderSource(shader, str);
@@ -50,6 +50,7 @@ function createShader(str, type) {
 	return shader;
 }
 
+// helper function to create a program from a pair of vert and frag shaders
 function createProgram(vstr, fstr) {
 	var program = gl.createProgram();
 	var vshader = createShader(vstr, gl.VERTEX_SHADER);
@@ -70,6 +71,7 @@ var arrays = {
   position: [-boxSize, -boxSize, 0, boxSize, -boxSize, 0, -boxSize, boxSize, 0, -boxSize, boxSize, 0, boxSize, -boxSize, 0, boxSize, boxSize, 0],
 };
 
+// create a vertex buffer and fill it with triangle positions
 var vertexPosBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, vertexPosBuffer);
 var vertices = arrays.position;
@@ -77,9 +79,9 @@ gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
 
 var program = createProgram(VERT_SHADER,FRAG_SHADER);
 gl.useProgram(program);
+
 program.timeUniform = gl.getUniformLocation(program, 'uTime');
 program.resolutionUniform = gl.getUniformLocation(program, 'uResolution');
-
 program.seedUniform = gl.getUniformLocation(program, 'uSeed');
 program.vertexPosAttrib = gl.getAttribLocation(program, 'position');
 
@@ -109,11 +111,12 @@ function render() {
 	gl.drawArrays(gl.TRIANGLES, 0, 6);
 
 	// read the render buffer back
-	// const pixels = new Uint8Array(OUTPUT_SIZE * OUTPUT_SIZE * 4);
 	const png = new PNG({ width: OUTPUT_SIZE, height: OUTPUT_SIZE });
 
+	// stream pixel values from the gl context to a png buffer
 	gl.readPixels(0, 0, OUTPUT_SIZE, OUTPUT_SIZE, gl.RGBA, gl.UNSIGNED_BYTE, png.data);
 
+	// pack the PNG and pipe it to our output file
 	png.pack().pipe(fs.createWriteStream(OUTPUT_PATH));
 }
 
