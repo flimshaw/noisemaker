@@ -9,6 +9,7 @@ const OUTPUT_SIZE = argv.size !== undefined ? Math.floor(argv.size) : 512;
 const NOISE_SCALE = argv.noise_scale !== undefined ? parseFloat(argv.noise_scale) : 1.0;
 const LOOP_RADIUS = argv.loop_radius !== undefined ? parseFloat(argv.loop_radius) : Math.PI;
 const TIME = argv.t !== undefined ? parseFloat(argv.t) : 0.0;
+const ALPHA = argv.a !== undefined;
 const OUTPUT_FILE = `noise_${OUTPUT_SIZE}_${TIME.toFixed(8)}.png`
 const OUTPUT_PATH = argv.o !== undefined ? path.resolve(process.cwd(), argv.o) : path.resolve(process.cwd(), OUTPUT_FILE);
 
@@ -19,10 +20,11 @@ noisemaker
 + + +
 
 options:
--size [512]	        png output size in pixels, always square
--noise_scale [1.0]	scale of noise, bigger number = higher frequency
+--size [512]	        png output size in pixels, always square
+--noise_scale [1.0]	scale of noise, bigger number = higher frequency
 -t [0.0]	          timestamp to render in noise field, like a seed you can fade
 -o [./noise_...]	  output path relative to current location for png
+-a 									include an alpha noise channel as well
 
 	`);
 	return false;
@@ -109,6 +111,7 @@ function render() {
 	// read the render buffer back
 	// const pixels = new Uint8Array(OUTPUT_SIZE * OUTPUT_SIZE * 4);
 	const png = new PNG({ width: OUTPUT_SIZE, height: OUTPUT_SIZE });
+
 	gl.readPixels(0, 0, OUTPUT_SIZE, OUTPUT_SIZE, gl.RGBA, gl.UNSIGNED_BYTE, png.data);
 
 	png.pack().pipe(fs.createWriteStream(OUTPUT_PATH));

@@ -60,13 +60,15 @@ void main() {
   vec2 rn = seed;
   vec2 gn = seed + PI*2.;
   vec2 bn = seed + PI*4.;
+  vec2 an = seed + PI*6.;
 
   float r = OctavePerlin(uv, OCTAVES, persistence, rn);
   float g = OctavePerlin(uv, OCTAVES, persistence, gn);
   float b = OctavePerlin(uv, OCTAVES, persistence, bn);
+  float a = OctavePerlin(uv, OCTAVES, persistence, an);
 
 
-  gl_FragColor = vec4( vec3(r,g,b), 1.0);
+  gl_FragColor = vec4(r,g,b,a);
   // gl_FragColor = vec4(vec3(rand(uv.x), rand(uv.y), 1.0), 1.0);
 
 }
