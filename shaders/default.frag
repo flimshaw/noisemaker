@@ -3,6 +3,7 @@ precision highp float;
 uniform vec2 uResolution;
 uniform float uTime;
 uniform vec2 uSeed;
+uniform float uNoiseScale;
 
 #define NOISE_SCALE 1.
 #define OCTAVES 16
@@ -11,10 +12,10 @@ uniform vec2 uSeed;
 float rand(float n){return fract(sin(n) * 43758.5453123);}
 
 float getNoise(vec2 uv, float scale, vec2 seed) {
-  float x1 = -(NOISE_SCALE * scale) + seed.x;
-  float y1 = -(NOISE_SCALE * scale) + seed.y;
-  float x2 = (NOISE_SCALE * scale) + seed.x;
-  float y2 = (NOISE_SCALE * scale) + seed.y;
+  float x1 = -(uNoiseScale * scale) + seed.x;
+  float y1 = -(uNoiseScale * scale) + seed.y;
+  float x2 = (uNoiseScale * scale) + seed.x;
+  float y2 = (uNoiseScale * scale) + seed.y;
 
   float dx = (x2-x1);
   float dy = (y2-y1);

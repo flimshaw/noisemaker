@@ -20,11 +20,10 @@ noisemaker
 + + +
 
 options:
---size [512]	        png output size in pixels, always square
+--size [512]	      png output size in pixels, always square
 --noise_scale [1.0]	scale of noise, bigger number = higher frequency
 -t [0.0]	          timestamp to render in noise field, like a seed you can fade
 -o [./noise_...]	  output path relative to current location for png
--a 									include an alpha noise channel as well
 
 by flimshaw <flimshaw.net>
 	`);
@@ -84,6 +83,7 @@ program.timeUniform = gl.getUniformLocation(program, 'uTime');
 program.resolutionUniform = gl.getUniformLocation(program, 'uResolution');
 program.seedUniform = gl.getUniformLocation(program, 'uSeed');
 program.vertexPosAttrib = gl.getAttribLocation(program, 'position');
+program.noiseScaleUniform = gl.getUniformLocation(program, 'uNoiseScale');
 
 function padToFour(number) {
 	let n = '';
@@ -101,6 +101,7 @@ function render() {
 	// set uniforms
 	gl.uniform2f(program.resolutionUniform, OUTPUT_SIZE, OUTPUT_SIZE);
 	gl.uniform1f(program.timeUniform, TIME*.005);
+	gl.uniform1f(program.noiseScaleUniform, NOISE_SCALE);
 	gl.uniform2f(program.seedUniform, TIME, TIME);
 
 	// setup screen tile

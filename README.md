@@ -4,7 +4,7 @@ Generate tileable perlin noise textures from the command line.
 
 ![noisemaker -t 653.0 -o example.png](./example.png?raw=true "noisemaker -t 653.0 -o example.png")
 
-It's reaaaal basic but I figured I'd share it. Uses glsl-noise, headless-gl and pngjs to generate perlin noise fields that are tileable in all directions. Adjust the "time" value to advance the generator. It kinda randomizes them over time, and starts to get a little glitchy after 10000.0 or so.
+It's reaaaal basic but I figured I'd share it. Uses glsl-noise, headless-gl and pngjs to generate 4-channel (RGBA) perlin noise field png's that are tileable in all directions. Adjust the "time" value to advance the generator. It kinda randomizes them over time, and starts to get a little glitchy after 10000.0 or so.
 
 ## installation
 
@@ -52,7 +52,6 @@ All this code is in `shaders/default.frag`, and I render it on a headless-gl con
 
 1. random seeds instead of just a single timeline
 2. non-square outputs
-3. option to include an alpha channel as well
 
 ## thanks
 
@@ -67,8 +66,8 @@ I got some code and concepts from these places, where people generously shared t
 + + +
 
 options:
--size [512]	        png output size in pixels, always square
--noise_scale [1.0]	scale of noise, bigger number = higher frequency
+--size [512]	        png output size in pixels, always square
+--noise_scale [1.0]	scale of noise, bigger number = higher frequency
 -t [0.0]	          timestamp to render in noise field, like a seed you can fade
 -o [./noise_...]	  output path relative to current location for png
 ```
