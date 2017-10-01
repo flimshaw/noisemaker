@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env node --use-strict
 const argv = require('minimist')(process.argv.slice(2));
 const fs = require('fs');
 const PNG = require('pngjs').PNG;
