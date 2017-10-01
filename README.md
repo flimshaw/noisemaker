@@ -6,6 +6,16 @@ Generate tileable perlin noise textures from the command line.
 
 It's reaaaal basic but I figured I'd share it. Uses glsl-noise, headless-gl and pngjs to generate 4-channel (RGBA) perlin noise field png's that are tileable in all directions. Adjust the "time" value to advance the generator. It kinda randomizes them over time, and starts to get a little glitchy after 10000.0 or so.
 
+## prereqs
+
+I'm using [headless-gl](https://www.npmjs.com/package/headless-gl) to handle off-screen gl
+rendering, which has a few prerequisites to run properly. On linux/debian based systems
+like Ubuntu, you can install the necessary libraries with:
+
+`sudo apt-get install -y build-essential libxi-dev libglu1-mesa-dev libglew-dev`
+
+See the README on [headless-gl](https://www.npmjs.com/package/headless-gl) for more information about other platforms.
+
 ## installation
 
 `npm install -g noisemaker`
