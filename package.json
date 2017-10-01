@@ -11,7 +11,7 @@
     "email": "me@charliehoey.com"
   },
   "bin": {
-    "noisemaker": "node --use-strict ./index.js"
+    "noisemaker": "./index.js"
   },
   "license": "MIT",
   "semistandard": {
