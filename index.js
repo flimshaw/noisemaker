@@ -65,7 +65,7 @@ function createProgram(vstr, fstr) {
 }
 
 // Create a two triangle plane that fills the viewport
-var boxSize = 1.;
+var boxSize = 1.0;
 
 var arrays = {
   position: [-boxSize, -boxSize, 0, boxSize, -boxSize, 0, -boxSize, boxSize, 0, -boxSize, boxSize, 0, boxSize, -boxSize, 0, boxSize, boxSize, 0],
