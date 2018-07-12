@@ -20,6 +20,7 @@
     ]
   },
   "dependencies": {
+    "glsl-fractal-brownian-noise": "^1.1.0",
     "glsl-noise": "0.0.0",
     "glslify": "^6.1.0",
     "headless-gl": "^3.0.7",

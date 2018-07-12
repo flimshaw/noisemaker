@@ -7,6 +7,7 @@ const glsl = require('glslify');
 const path = require('path');
 
 const OUTPUT_SIZE = argv.size !== undefined ? Math.floor(argv.size) : 512;
+const FREQUENCY_STEPS = argv.steps !== undefined ? Math.floor(argv.steps) : 0.;
 const NOISE_SCALE = argv.noise_scale !== undefined ? parseFloat(argv.noise_scale) : 1.0;
 const LOOP_RADIUS = argv.loop_radius !== undefined ? parseFloat(argv.loop_radius) : Math.PI;
 const TIME = argv.t !== undefined ? parseFloat(argv.t) : 0.0;
@@ -23,6 +24,7 @@ noisemaker
 options:
 --size [512]	      png output size in pixels, always square
 --noise_scale [1.0]	scale of noise, bigger number = higher frequency
+--steps [0]					increase the frequency by x steps in each channel
 -t [0.0]	          timestamp to render in noise field, like a seed you can fade
 -o [./noise_...]	  output path relative to current location for png
 
@@ -85,6 +87,7 @@ program.resolutionUniform = gl.getUniformLocation(program, 'uResolution');
 program.seedUniform = gl.getUniformLocation(program, 'uSeed');
 program.vertexPosAttrib = gl.getAttribLocation(program, 'position');
 program.noiseScaleUniform = gl.getUniformLocation(program, 'uNoiseScale');
+program.stepsUniform = gl.getUniformLocation(program, 'uSteps');
 
 function padToFour(number) {
 	let n = '';
@@ -104,6 +107,7 @@ function render() {
 	gl.uniform1f(program.timeUniform, TIME*.005);
 	gl.uniform1f(program.noiseScaleUniform, NOISE_SCALE);
 	gl.uniform2f(program.seedUniform, TIME, TIME);
+	gl.uniform1f(program.stepsUniform, FREQUENCY_STEPS);
 
 	// setup screen tile
 	gl.enableVertexAttribArray(program.vertexPosAttrib);

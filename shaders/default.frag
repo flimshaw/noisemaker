@@ -1,21 +1,27 @@
 precision highp float;
-#pragma glslify: cnoise4 = require(glsl-noise/classic/4d)
+#pragma glslify: cnoise4 = require(glsl-noise/periodic/4d)
+// #pragma glslify: cnoise4 = require('glsl-fractal-brownian-noise/4d')
 uniform vec2 uResolution;
 uniform float uTime;
 uniform vec2 uSeed;
 uniform float uNoiseScale;
+uniform float uSteps;
 
 #define NOISE_SCALE 1.
 #define OCTAVES 16
 #define PI 3.1415
+#define PERIOD 2.425e3
+#define PERSISTENCE .7
 
 float rand(float n){return fract(sin(n) * 43758.5453123);}
 
-float getNoise(vec2 uv, float scale, vec2 seed) {
-  float x1 = -(uNoiseScale * scale) + seed.x;
-  float y1 = -(uNoiseScale * scale) + seed.y;
-  float x2 = (uNoiseScale * scale) + seed.x;
-  float y2 = (uNoiseScale * scale) + seed.y;
+float persistence = 0.;
+
+float getNoise(vec2 uv, float frequency, vec2 seed) {
+  float x1 = -(uNoiseScale * frequency) + seed.x;
+  float y1 = -(uNoiseScale * frequency) + seed.y;
+  float x2 = (uNoiseScale * frequency) + seed.x;
+  float y2 = (uNoiseScale * frequency) + seed.y;
 
   float dx = (x2-x1);
   float dy = (y2-y1);
@@ -31,22 +37,23 @@ float getNoise(vec2 uv, float scale, vec2 seed) {
   float nz = x1 + sin(s*2.0*PI)*dxPi;
   float nw = y1 + sin(t*2.0*PI)*dyPi;
 
-  float r = cnoise4(vec4(nx, ny, nz, nw));
-  return r + .25;
+  float r = cnoise4(vec4(nx, ny, nz, nw), vec4(PERIOD));
+  return r*1.5+.5;
 }
 
 float OctavePerlin(vec2 uv, int octaves, float persistence, vec2 seed) {
     float total = 0.0;
-    float frequency = .5;
+    float frequency = 1./float(OCTAVES/2);
     float amplitude = 1.0;
     float maxValue = 0.0;  // Used for normalizing result to 0.0 - 1.0
+    persistence = PERSISTENCE;
     for(int i=0;i<octaves;++i) {
         total += getNoise(uv, frequency, seed) * amplitude;
 
         maxValue += amplitude;
 
         amplitude *= persistence;
-        frequency *= 2.0;
+        frequency *= 1.5;
     }
 
     return total/maxValue;
@@ -56,17 +63,16 @@ void main() {
   vec2 uv = gl_FragCoord.xy / uResolution.xy;
 
   vec2 seed = uSeed;
-  float persistence = .55;
 
-  vec2 rn = seed;
-  vec2 gn = seed + PI*2.;
-  vec2 bn = seed + PI*4.;
-  vec2 an = seed + PI*6.;
+  vec2 rn = seed + 55.;
+  vec2 gn = seed + 26.;// + PI*2.;
+  vec2 bn = seed + 22.;// + PI*4.;
+  vec2 an = seed + 29.;// + PI*6.;
 
   float r = OctavePerlin(uv, OCTAVES, persistence, rn);
   float g = OctavePerlin(uv, OCTAVES, persistence, gn);
   float b = OctavePerlin(uv, OCTAVES, persistence, bn);
-  float a = OctavePerlin(uv, OCTAVES, persistence, an);
+  float a = 1.;//OctavePerlin(uv + uSteps * 3., OCTAVES, persistence, an);
 
 
   gl_FragColor = vec4(r,g,b,a);
