@@ -5,6 +5,7 @@ const fs = require('fs');
 const PNG = require('pngjs').PNG;
 const glsl = require('glslify');
 const path = require('path');
+const pkg = require('./package.json')
 
 const OUTPUT_SIZE = argv.size !== undefined ? Math.floor(argv.size) : 512;
 const NOISE_SCALE = argv.noise_scale !== undefined ? parseFloat(argv.noise_scale) : 1.0;
@@ -17,7 +18,7 @@ const OUTPUT_PATH = argv.o !== undefined ? path.resolve(process.cwd(), argv.o) :
 // if no arguments passed, display help
 if(Object.keys(argv).length === 1) {
 	console.log(`
-noisemaker
+${pkg.name} v${pkg.version}
 + + +
 
 options:
@@ -34,7 +35,7 @@ by flimshaw <flimshaw.net>
 const VERT_SHADER = glsl(argv.vert !== undefined ? argv.vert : './shaders/default.vert');
 const FRAG_SHADER = glsl(argv.frag !== undefined ? argv.frag : './shaders/default.frag');
 
-const gl = require('headless-gl')(OUTPUT_SIZE, OUTPUT_SIZE);
+const gl = require('gl')(OUTPUT_SIZE, OUTPUT_SIZE);
 
 gl.clearColor(0,0,0,1);
 gl.clear(gl.COLOR_BUFFER_BIT);
