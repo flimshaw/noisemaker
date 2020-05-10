@@ -20,10 +20,10 @@
     ]
   },
   "dependencies": {
+    "gl": "^4.5.0",
     "glsl-noise": "0.0.0",
-    "glslify": "^6.1.0",
-    "headless-gl": "^3.0.7",
-    "minimist": "^1.2.0",
+    "glslify": "^7.0.0",
+    "minimist": "^1.2.5",
     "pngjs": "^3.3.0"
   }
 }

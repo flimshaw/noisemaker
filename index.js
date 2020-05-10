@@ -34,7 +34,7 @@ by flimshaw <flimshaw.net>
 const VERT_SHADER = glsl(argv.vert !== undefined ? argv.vert : './shaders/default.vert');
 const FRAG_SHADER = glsl(argv.frag !== undefined ? argv.frag : './shaders/default.frag');
 
-const gl = require('headless-gl')(OUTPUT_SIZE, OUTPUT_SIZE);
+const gl = require('gl')(OUTPUT_SIZE, OUTPUT_SIZE);
 
 gl.clearColor(0,0,0,1);
 gl.clear(gl.COLOR_BUFFER_BIT);
